@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-// react hook, useState
-import './App.css';
+import React, { useEffect, useState } from "react";
+// react hook, useState, useEffect - value changes help to give component
+import "./App.css";
 import Header from "./Header";
 import AddContact from "./AddContact";
 import ContactList from "./ContactList";
 
 function App() {
-  // provide "List"
   // const contacts = [
+  // provide "List"
   //   {
   //     id: "1",
   //     name: "Aiman",
@@ -20,16 +20,34 @@ function App() {
   //   },
 
   // ];
-  const[contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState([]);
+  const LOCAL_STORAGE_KEY = "contact";
+  const addContactHandler = (contact) => {
+    // define the function
+    console.log(contact);
+    setContacts([...contacts, contact]);
+  };
+
+  useEffect(() => {
+    // retriving contacts
+    const retriveContacts = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    if (retriveContacts) setContacts(retriveContacts);
+  }, [contacts]);
+
+  useEffect(() => {
+    // storing contacts
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
+  }, [contacts]);
+
   return (
-    <div className='ui container'>
-      <Header/>
-      <AddContact/>
+    <div className="ui container">
+      <Header />
+      <AddContact addContactHandler={addContactHandler} />
+      {/* pass a a function as props declare the handler  */}
+      <ContactList contacts={contacts} />{" "}
       {/* pass contact in contactList using props */}
-      <ContactList contacts = {contacts}/>
     </div>
   );
 }
 
 export default App;
- 
